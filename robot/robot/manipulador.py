@@ -2,77 +2,68 @@
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Twist
-from pynput.keyboard import Key, Listener
+import pygame
 import numpy as np
-import time
+
+class XboxController(Node):
+    def __init__(self):
+        super().__init__("xbox_controller")
+        
+        pygame.init()
+        pygame.joystick.init()
+
+        if pygame.joystick.get_count() == 0:
+            self.get_logger().error("No Xbox controller detected!")
+            exit()
+
+        self.joystick = pygame.joystick.Joystick(0)
+        self.joystick.init()
+        self.get_logger().info("Xbox controller detected!")
+
+        self.xbox_controller_state = [0.0, 0.0, 0.0, 0.0]
+        self.dead_zone = 0.1
+
+    def get_controller_input(self):
+        pygame.event.pump()  # Process controller events
+
+        # Read left stick X-axis (Left/Right movement)
+        x_axis = self.joystick.get_axis(0)
+        y_axis = self.joystick.get_axis(1)
+        z_axis = self.joystick.get_axis(3)
+
+        # Apply dead zone
+        x_axis = 0 if abs(x_axis) < self.dead_zone else x_axis
+        y_axis = 0 if abs(y_axis) < self.dead_zone else y_axis
+        z_axis = 0 if abs(z_axis) < self.dead_zone else z_axis
+
+        return {"x": x_axis, "y": y_axis, "z": z_axis, "grip": self.joystick.get_button(0)}
 
 class Manipulador(Node):
     def __init__(self):
         super().__init__("manipulador")
         self.enviar_datos = self.create_publisher(Twist, "Posicion", 10)
-        self.recibir_datos_ = self.create_subscription(Twist, "Posicion", self.pose_callback, 10)
-        self.current_pos = np.zeros(4)
-
-        self.current_pos[0] = 0.15
-        self.current_pos[1] = 0
-        self.current_pos[2] = 0.08
-        self.current_pos[3] = 0.0
-
+        self.current_pos = np.array([0.15, 0.0, 0.08, 0.0])
         self.speed = 0.005
-        self.last_pressed_time = 0  # Control de tiempo de la última tecla presionada
 
-    def pose_callback(self, msgPos: Twist):
-        self.current_pos[0] = msgPos.linear.x
-        self.current_pos[1] = msgPos.linear.y
-        self.current_pos[2] = msgPos.linear.z
-        self.current_pos[3] = msgPos.angular.x
+        # Initialize Xbox controller
+        self.controller = XboxController()
 
-        #self.get_logger().info(f"Posición actual: {self.current_pos}")
+        # Run control loop
+        self.create_timer(0.1, self.controller_read)
 
-    def start_keyboard_listener(self):
-        # Inicia el listener en un hilo separado
-        listener = Listener(on_press=self.on_press, on_release=self.on_release)
-        listener.start()
+    def controller_read(self):
+        controller_input = self.controller.get_controller_input()
 
-    def on_press(self, key):
-        current_time = time.time()
+        # Mapping controller input to movement
+        self.current_pos[0] += controller_input["y"] * self.speed  # Forward/Backward
+        self.current_pos[1] -= controller_input["x"] * self.speed  # Left/Right
+        self.current_pos[2] += controller_input["z"] * self.speed / 2  # Up/Down
         
-        # Solo procesamos la tecla si ha pasado suficiente tiempo desde la última tecla
-        if current_time - self.last_pressed_time >= 0.12:  # Por ejemplo, 0.1 segundos de intervalo
-            try:
-                if key.char == 'w':  # Mover hacia adelante
-                    self.current_pos[0] += self.speed
-                    self.publicar_posicion()
-                elif key.char == 's':  # Mover hacia atrás
-                    self.current_pos[0] -= self.speed
-                    self.publicar_posicion()
-                elif key.char == 'a':  # Mover hacia la izquierda
-                    self.current_pos[1] += self.speed
-                    self.publicar_posicion()
-                elif key.char == 'd':  # Mover hacia la derecha
-                    self.current_pos[1] -= self.speed
-                    self.publicar_posicion()
-                elif key.char == 'e':  # Mover hacia arriba
-                    self.current_pos[2] += self.speed/2
-                    self.publicar_posicion()
-                elif key.char == 'q':  # Mover hacia abajo
-                    self.current_pos[2] -= self.speed/2
-                    self.publicar_posicion()
-                elif key.char == 'f':
-                    if(self.current_pos[3] == 1):
-                        self.current_pos[3] = 0.0
-                    else:
-                        self.current_pos[3] = 1.0
+        # Toggle gripper state
+        if controller_input["grip"]:
+            self.current_pos[3] = 1.0 if self.current_pos[3] == 0 else 0.0
 
-                    self.publicar_posicion()
-            except AttributeError:
-                pass  # Manejar teclas especiales que no tienen el atributo `char`
-
-            self.last_pressed_time = current_time  # Actualiza el tiempo de la última tecla presionada
-
-    def on_release(self, key):
-        if key == Key.esc:  # Detener el listener con `Esc`
-            return False
+        self.publicar_posicion()
 
     def publicar_posicion(self):
         msg = Twist()
@@ -83,23 +74,13 @@ class Manipulador(Node):
 
         self.enviar_datos.publish(msg)
 
-        if(msg.angular.x == 1.0):
-            print(f"Posición actual: [{msg.linear.x:.3f} / {msg.linear.y:.3f} / {msg.linear.z:.3f} / abierto]")
-        else:
-            print(f"Posición actual: [{msg.linear.x:.3f} / {msg.linear.y:.3f} / {msg.linear.z:.3f} / cerrado]")
+        estado_pinza = "abierto" if msg.angular.x == 1.0 else "cerrado"
+        print(f"Posición actual: [{msg.linear.x:.3f} / {msg.linear.y:.3f} / {msg.linear.z:.3f} / {estado_pinza}]")
 
 def main(args=None):
     rclpy.init(args=args)
     node = Manipulador()
-
-    # Inicia el listener de teclado
-    node.start_keyboard_listener()
-
-    try:
-        rclpy.spin(node)
-    except KeyboardInterrupt:
-        pass
-
+    rclpy.spin(node)
     rclpy.shutdown()
 
 if __name__ == "__main__":
