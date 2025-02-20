@@ -85,6 +85,7 @@ class Cinematica(Node):
             T = SE3(x, y, z) * SE3.Ry(np.pi/2)
 
         print("")
+        print(msg)
         print(self.qActual)
 
         success = False
@@ -115,7 +116,7 @@ class Cinematica(Node):
         T1 = T1 + np.pi
         T2 = T2 - np.pi/2
         T3 = T3 + np.pi/2
-        T4 = T4 + np.deg2rad(128)
+        T4 = T4 + np.deg2rad(134)
 
 
         if(T1 < 0):

@@ -8,7 +8,7 @@ from dynamixel_sdk import *
 
 import time
 
-GripperForce = 100 #10-800
+GripperForce = 300 #10-800
 
 TORQUE = 64
 VELOCITY = 112
@@ -91,7 +91,7 @@ class Motores(Node):
         J4 = int(ReSize(msg.angular.x))
         J5 = int(ReSize(msg.angular.y))
 
-        #print("J1: " + str(round(msg.linear.x)) + "°   J2: " + str(round(msg.linear.y)) + "°   J3: " + str(round(msg.linear.z)) + "°   J4: " + str(round(msg.angular.x)) + "°   J5: " + str(round(msg.angular.y)) + "°")
+        self.get_logger().info("J1: " + str(round(msg.linear.x)) + "°   J2: " + str(round(msg.linear.y)) + "°   J3: " + str(round(msg.linear.z)) + "°   J4: " + str(round(msg.angular.x)) + "°   J5: " + str(round(msg.angular.y)) + "°")
 
         packetHandler.write4ByteTxRx(portHandler, 11, GOAL, J1)
         packetHandler.write4ByteTxRx(portHandler, 12, GOAL, J2)

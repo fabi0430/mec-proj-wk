@@ -34,7 +34,7 @@ class Programar(Node):
 
                 z = input("Posición z deseada (o escribe 's' para salir): ")
                 if z.lower() == "s":
-                    break
+                    break 
 
                 x = float(x) / 100
                 y = float(y) / 100
@@ -42,6 +42,17 @@ class Programar(Node):
 
                 A = [x, y, z, self.g]
                 self.Points.append(A)
+
+                msg = Twist()
+
+                msg.linear.x = x
+                msg.linear.y = y
+                msg.linear.z = z
+                msg.angular.x = self.g
+
+                self.enviar_datos.publish(msg)
+
+                time.sleep(0.5)
 
         elif Seleccion == "2":
             self.g = float(1.0)
