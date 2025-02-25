@@ -20,7 +20,7 @@ ACTUAL = 132
 
 BAUDRATE = 1000000
 PROTOCOL_VERSION = 2.0
-DEVICENAME = '/dev/ttyUSB0'  # Puerto
+DEVICENAME = '/dev/ttyUSB0'  # Port
 
 # Inicializar el puerto y el protocolo
 portHandler = PortHandler(DEVICENAME)

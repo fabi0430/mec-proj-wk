@@ -1,0 +1,29 @@
+- topic_name: /J1
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL
+
+- topic_name: /J2
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL
+
+- topic_name: /J3
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL
+
+- topic_name: /J4
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL
+
+- topic_name: /J5
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL
+
+- topic_name: /J6
+  ros_type_name: std_msgs/msg/Float64
+  gz_type_name: gz.msgs.Double
+  direction: BIDIRECTIONAL

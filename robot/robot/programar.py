@@ -19,20 +19,21 @@ class Programar(Node):
 
     def send_velocity_command(self):
 
-        print("Seleccione una opción: \n\t1.- Nuevo punto.\n\t2.- Abrir pinzas.\n\t3.- Cerrar pinzas.\n\t4.- Suprimir punto anterior.\n\t5.- Play.")
+        print("Select an option: \n\t1.- New point.\n\t2.- Open tweezers.\n\t3.- Close tweezers.\n\t4.- Delete previous point.\n\t5.- Play.")
         Seleccion = input("")
 
         if Seleccion == "1":
+            print("")
             for i in range(1):
-                x = input("Posición x deseada (o escribe 's' para salir): ")
+                x = input("Desired x position in cm (or type 's' to close): ")
                 if x.lower() == "s":
                     break
 
-                y = input("Posición y deseada (o escribe 's' para salir): ")
+                y = input("Desired y position in cm (or type 's' to close): ")
                 if y.lower() == "s":
                     break
 
-                z = input("Posición z deseada (o escribe 's' para salir): ")
+                z = input("Desired z position in cm (or type 's' to close): ")
                 if z.lower() == "s":
                     break 
 
@@ -53,6 +54,7 @@ class Programar(Node):
                 self.enviar_datos.publish(msg)
 
                 time.sleep(0.5)
+            print("")
 
         elif Seleccion == "2":
             self.g = float(1.0)
@@ -80,7 +82,7 @@ class Programar(Node):
 
         elif Seleccion == "5":
 
-            print("\nPosiciones guardadas:")
+            print("\nSaved positions:")
             for i, posicion in enumerate(self.Points, start=1):
                 print(f"{i}: {posicion}")
 
@@ -94,8 +96,9 @@ class Programar(Node):
                 self.enviar_datos.publish(msg)
 
                 time.sleep(1)
+            print("")
         else:
-            print("\n\tSELECCION INCORRECTA\n")
+            print("\n\tINCORRET SELECTION\n")
 
 def main(args = None):
     rclpy.init(args=args)
