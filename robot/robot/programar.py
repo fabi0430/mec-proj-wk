@@ -64,6 +64,15 @@ class Programar(Node):
             except:
                 A = [0.0,0.0,0.0,self.g]
 
+            msg = Twist()
+
+            msg.linear.x = self.Points[-1][0]
+            msg.linear.y = self.Points[-1][1]
+            msg.linear.z = self.Points[-1][2]
+            msg.angular.x = self.g
+
+            self.enviar_datos.publish(msg)
+
             self.Points.append(A)
 
         elif Seleccion == "3":
@@ -73,6 +82,15 @@ class Programar(Node):
                 A = [self.Points[-1][0],self.Points[-1][1],self.Points[-1][2], self.g]
             except:
                 A = [0.0,0.0,0.0,self.g]
+
+            msg = Twist()
+
+            msg.linear.x = self.Points[-1][0]
+            msg.linear.y = self.Points[-1][1]
+            msg.linear.z = self.Points[-1][2]
+            msg.angular.x = self.g
+
+            self.enviar_datos.publish(msg)
 
             self.Points.append(A)
 
@@ -95,7 +113,7 @@ class Programar(Node):
 
                 self.enviar_datos.publish(msg)
 
-                time.sleep(1)
+                time.sleep(2.5)
             print("")
         else:
             print("\n\tINCORRET SELECTION\n")

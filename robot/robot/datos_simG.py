@@ -50,7 +50,7 @@ class datos_simG(Node):
         J1 = J1 - 180.0
         J2 = J2 - 180.0
         J3 = J3 - 180.0
-        J4 = J4 - 128
+        J4 = J4 - 134
 
         J1 = np.deg2rad(J1)
         J2 = np.deg2rad(J2)

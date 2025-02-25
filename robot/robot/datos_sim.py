@@ -33,7 +33,7 @@ class DatosSim(Node):
         J1 = J1 - 180.0
         J2 = J2 - 180.0
         J3 = J3 - 180.0
-        J4 = J4 - 128
+        J4 = J4 - 134.0
 
         if(msg.angular.y == 120.0):
             J5 = 0.018
