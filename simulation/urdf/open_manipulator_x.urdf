@@ -9,6 +9,10 @@
       <geometry>
         <mesh filename="package://simulation/meshes/link1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
     </visual>
 
     <collision>
@@ -45,6 +49,9 @@
       <geometry>
         <mesh filename="package://simulation/meshes/link2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
     </visual>
 
     <collision>
@@ -80,6 +87,9 @@
       <geometry>
         <mesh filename="package://simulation/meshes/link3.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
     </visual>
 
     <collision>
@@ -116,6 +126,9 @@
         <geometry>
           <mesh filename="package://simulation/meshes/link4.stl" scale="0.001 0.001 0.001"/>
         </geometry>
+        <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
       </visual>
 
       <collision>
@@ -150,6 +163,9 @@
       <geometry>
         <mesh filename="package://simulation/meshes/link5.stl" scale="0.001 0.001 0.001"/>
       </geometry>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
      </visual>
 
     <collision>
@@ -180,12 +196,16 @@
         <dynamics damping="0.1"/>
       </joint>
 
+<!-- Link Lgripper -->
   <link name="gripper_left_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <mesh filename="package://simulation/meshes/gripper_left_palm.stl" scale="0.001 0.001 0.001"/>
         </geometry>
+        <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
       </visual>
 
       <collision>
@@ -223,13 +243,16 @@
       <dynamics damping="0.1"/>
     </joint>
 
+<!-- Link Rgripper -->  
     <link name="gripper_right_link">
       <visual>
         <origin xyz="0 0 0" rpy="0 0 0"/>
         <geometry>
           <mesh filename="package://simulation/meshes/gripper_right_palm.stl" scale="0.001 0.001 0.001"/>
         </geometry>
-        <material name="grey"/>
+      <material name="grey">
+        <color rgba="0.5 0.5 0.5 1"/>
+      </material>
       </visual>
 
       <collision>
