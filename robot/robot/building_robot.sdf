@@ -192,7 +192,7 @@
             </link>
 
             <link name='link5'>
-                <pose relative_to="link4">1.24 0 0 0 0 0</pose>
+                <pose relative_to="link4">1.24 0 0 0 1.570796 0</pose>
 
                 <visual name='visual5'>
 

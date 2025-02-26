@@ -2,9 +2,11 @@ import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.actions import ExecuteProcess
+from ros_gz_bridge.actions import RosGzBridge
 
 import os
 from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -53,37 +55,60 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('rviz'))  # Using IfCondition for evaluation
     )
 
-    return launch.LaunchDescription([
-        # Nodo 1
-        Node(
-            package='robot',  # Nombre de tu paquete
-            executable='motores',    # Nombre del ejecutable del nodo
-            name='motores',          # Nombre del nodo
-            output='screen'        # Mostrar salida en la terminal
-        ),
-        # Nodo 2
-        Node(
-            package='robot',
-            executable='cinematica',
-            name='cinematica',
-            output='screen'
-        ),
+    bridge_node = RosGzBridge(
+        bridge_name="ros_gz_bridge",
+        config_file="/home/oswaldo/Ros2WS/src/robot/robot/topic_bridge.yaml"  # Ruta al YAML
+    )
 
-        # Nodo 3
-        Node(
-            package='robot',
-            executable='datos_sim',
-            name='datos_sim',
-            output='screen'
-        ),
+    # Nodo RosGzBridge con configuración YAML
+    bridge_node = RosGzBridge(
+        bridge_name="ros_gz_bridge",
+        config_file="/home/oswaldo/Ros2WS/src/robot/robot/topic_bridge.yaml"  # Ruta al YAML
+    )
 
-        # Nodo 4
-        ExecuteProcess(
-            cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'programar'],
-            output='screen'
-        ),
+    # Nodo cinemática
+    cinematica_node = Node(
+        package='robot',
+        executable='cinematica',
+        name='cinematica',
+        output='screen'
+    )
 
-        declare_rviz_arg,
-        robot_state_publisher_node,
-        rviz_node
-    ])
+    # Nodo gazebo
+    datos_simG_node = Node(
+        package='robot',
+        executable='datos_simG',
+        name='datos_simG',
+        output='screen'
+    )
+
+    # Nodo gazebo
+    datos_sim_node = Node(
+        package='robot',
+        executable='datos_sim',
+        name='datos_sim',
+        output='screen'
+    )
+
+    execute_process_node = ExecuteProcess(
+        cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'manipulador'],
+        output='screen'
+    )
+
+    gazebo_node = ExecuteProcess(
+        cmd=['gnome-terminal', '--', 'bash', '-c', 'cd ~/Ros2WS/src/robot/robot && gz sim building_robot.sdf'],
+        output='screen'
+    )
+
+    ld = LaunchDescription()
+    ld.add_action(bridge_node)
+    ld.add_action(cinematica_node)
+    ld.add_action(datos_simG_node)
+    ld.add_action(datos_sim_node)
+    ld.add_action(gazebo_node)
+    ld.add_action(execute_process_node)
+    ld.add_action(declare_rviz_arg)
+    ld.add_action(robot_state_publisher_node)
+    ld.add_action(rviz_node)
+
+    return ld

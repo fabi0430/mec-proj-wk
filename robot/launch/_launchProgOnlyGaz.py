@@ -10,14 +10,6 @@ def generate_launch_description():
         config_file="/home/oswaldo/Ros2WS/src/robot/robot/topic_bridge.yaml"  # Ruta al YAML
     )
 
-    # Nodo motores
-    motores_node = Node(
-        package='robot',
-        executable='motores',
-        name='motores',
-        output='screen'
-    )
-
     # Nodo cinemática
     cinematica_node = Node(
         package='robot',
@@ -50,7 +42,6 @@ def generate_launch_description():
     ld.add_action(cinematica_node)
     ld.add_action(datos_simG_node)
     ld.add_action(gazebo_node)
-    ld.add_action(motores_node)
     ld.add_action(execute_process_node)
 
     return ld

@@ -5,6 +5,7 @@ from launch.actions import ExecuteProcess
 
 import os
 from ament_index_python.packages import get_package_share_directory
+from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -54,14 +55,8 @@ def generate_launch_description():
     )
 
     return launch.LaunchDescription([
+
         # Nodo 1
-        Node(
-            package='robot',  # Nombre de tu paquete
-            executable='motores',    # Nombre del ejecutable del nodo
-            name='motores',          # Nombre del nodo
-            output='screen'        # Mostrar salida en la terminal
-        ),
-        # Nodo 2
         Node(
             package='robot',
             executable='cinematica',
@@ -69,7 +64,7 @@ def generate_launch_description():
             output='screen'
         ),
 
-        # Nodo 3
+        # Nodo 2
         Node(
             package='robot',
             executable='datos_sim',
@@ -77,9 +72,9 @@ def generate_launch_description():
             output='screen'
         ),
 
-        # Nodo 4
+        # Nodo 3
         ExecuteProcess(
-            cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'programar'],
+            cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'manipulador'],
             output='screen'
         ),
 

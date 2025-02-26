@@ -57,6 +57,13 @@ def generate_launch_description():
     return launch.LaunchDescription([
         # Nodo 1
         Node(
+            package='robot',  # Nombre de tu paquete
+            executable='motores',    # Nombre del ejecutable del nodo
+            name='motores',          # Nombre del nodo
+            output='screen'        # Mostrar salida en la terminal
+        ),
+        # Nodo 2
+        Node(
             package='robot',
             executable='cinematica',
             name='cinematica',

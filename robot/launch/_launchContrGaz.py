@@ -10,19 +10,19 @@ def generate_launch_description():
         config_file="/home/oswaldo/Ros2WS/src/robot/robot/topic_bridge.yaml"  # Ruta al YAML
     )
 
-    # Nodo motores
-    motores_node = Node(
-        package='robot',
-        executable='motores',
-        name='motores',
-        output='screen'
-    )
-
     # Nodo cinemática
     cinematica_node = Node(
         package='robot',
         executable='cinematica',
         name='cinematica',
+        output='screen'
+    )
+
+    # Nodo cinemática
+    motores_node = Node(
+        package='robot',
+        executable='motores',
+        name='motores',
         output='screen'
     )
 
@@ -35,7 +35,7 @@ def generate_launch_description():
     )
 
     execute_process_node = ExecuteProcess(
-        cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'programar'],
+        cmd=['gnome-terminal', '--', 'ros2', 'run', 'robot', 'manipulador'],
         output='screen'
     )
 
